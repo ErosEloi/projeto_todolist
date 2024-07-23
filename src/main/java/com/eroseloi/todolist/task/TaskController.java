@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eroseloi.todolist.utils.Utils;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
@@ -54,20 +56,20 @@ public class TaskController {
 
     // Listagem de task por usuário
     @GetMapping("/")
-    public List<TaskModel> list(HttpServletRequest request){
+    public List<TaskModel> list(HttpServletRequest request) {
         var idUser = request.getAttribute("idUser");
         var tasks = this.taskRepository.findByIdUser((UUID) idUser);
         return tasks;
     }
 
     @PutMapping("/{id}")
-    public void update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
-        
-        var idUser = request.getAttribute("idUser");
-        taskModel.setIdUser((UUID) idUser);
-        taskModel.setId(id);
-        this.taskRepository.save(null);
-    }
+    public void update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id) {
 
+        var task = this.taskRepository.findById(id).orElse(null);
+
+        Utils.copyNonNullPropeties(taskModel, task);
+
+        this.taskRepository.save(task);
+    }
 
 }
