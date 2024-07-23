@@ -78,7 +78,7 @@ public class TaskController {
                     .body("Usuario nao tem permissao para alterar essa tarefa");
         }
 
-        Utils.copyNonNullPropeties(taskModel, task);1
+        Utils.copyNonNullPropeties(taskModel, task);
 
         var taskUpdated = this.taskRepository.save(task);
         return ResponseEntity.ok().body(taskUpdated);
